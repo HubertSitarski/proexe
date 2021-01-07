@@ -8,7 +8,7 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 
 class TokenService
 {
-    public function getToken(string $login, string $system)
+    public function getToken(string $login, string $system): string
     {
         $config = Configuration::forSymmetricSigner(
             new Sha256(),
