@@ -2,20 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\MovieService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MovieController extends Controller
 {
+    private $movieService;
+
+    public function __construct(MovieService $movieService)
+    {
+        $this->movieService = $movieService;
+    }
+
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function getTitles(Request $request): JsonResponse
+    public function getTitles(): JsonResponse
     {
-        // TODO
+        $items = Cache::remember('titles', 60, function () {
+            return retry(5, function () {
+                return $this->movieService->collectAllMovies();
+            }, 100);
+        });
 
-        return response()->json([]);
+        return response()->json($items);
     }
 }
