@@ -8,7 +8,7 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 
 class TokenService
 {
-    public function getToken()
+    public function getToken(string $login, string $system)
     {
         $config = Configuration::forSymmetricSigner(
             new Sha256(),
@@ -17,14 +17,15 @@ class TokenService
 
         $now = new \DateTimeImmutable();
         $token = $config->builder()
-            ->issuedBy('127.0.0.1:800')
-            ->permittedFor('127.0.0.1:800')
+            ->issuedBy($login)
+            ->permittedFor($system)
             ->identifiedBy('4f1g23a12aa')
             ->issuedAt($now)
             ->canOnlyBeUsedAfter($now->modify('+1 minute'))
             ->expiresAt($now->modify('+1 hour'))
             ->withClaim('uid', 1)
-            ->withHeader('foo', 'bar')
+            ->withHeader('login', $login)
+            ->withHeader('system', $system)
             ->getToken($config->signer(), $config->signingKey());
 
         return $token->toString();

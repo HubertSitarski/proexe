@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Services\AuthorizationService;
 use App\Services\TokenService;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +32,7 @@ class AuthController extends Controller
         if ($this->authorizationService->authorize($request->login, $request->password)) {
             return response()->json([
                 'status' => 'success',
-                'token' =>  $this->tokenService->getToken()
+                'token' =>  $this->tokenService->getToken($request->login, Str::getPrefix($request->login))
             ]);
         }
 
