@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler
             $exception instanceof BarUnavailableException ||
             $exception instanceof BazUnavailableException
         ) {
-            return response()->failure(Response::HTTP_UNAUTHORIZED);
+            return response()->failure(Response::HTTP_SERVICE_UNAVAILABLE);
         }
 
         return parent::render($request, $exception);
