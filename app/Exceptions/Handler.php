@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use External\Foo\Exceptions\AuthenticationFailedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -50,6 +52,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof AuthenticationFailedException) {
+            return response()->failure(Response::HTTP_UNAUTHORIZED);
+        }
+
         return parent::render($request, $exception);
     }
 }
