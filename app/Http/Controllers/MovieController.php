@@ -20,7 +20,7 @@ class MovieController extends Controller
      */
     public function getTitles(): JsonResponse
     {
-        $items = Cache::remember('titles', 1, function () {
+        $items = Cache::remember('titles', 60, function () {
             return retry(5, function () {
                 return $this->movieService->collectAllMovies();
             }, 100);
